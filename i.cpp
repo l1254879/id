@@ -17,25 +17,33 @@ int main(int argc,char*argv[]){
   return 0;
 }
 void open_file(int argc,char *argv[]){
-  FILE*tmp;
-  char id[10]={0};//since fgets read \0
-	bool type;
-	int i;
-  fstream file;
+  char id[11]={0};//since fgets read \0
+  bool type;
+  int i;
+  ifstream file;
   if(argc==1){ //if faile to open file
-    cout<<"Fail to open file"<<endl;
+    cout<<"No file"<<endl;
   }
- else if(argc==2){
+ else if(argc==2){//if ./a.out file
   	file.open(argv[1],ios::in);
-  	do{//get a line string
-  		file.getline(id,sizeof(id));
-		type=isvalid(id);
+  	if(!file){
+  		cout<<"Failed to open file"<<endl;
+	}
+  	//file.getline(id,sizeof(id));
+  	while(file.getline(id,11)){//get a line string
+  		if(sizeof(id)==11){
+			type=isvalid(id);
 			if(type== true)
  				allinone(id,type);
 			else
  				allinone(id,type);
-
-	}while(!file.eof());
+		}
+		else{
+				allinone(id,0);
+		}
+		
+  		//file.getline(id,sizeof(id));
+	}
 	file.close();
   }
   else{
@@ -90,23 +98,24 @@ int returnSubstr(const string &IDNumber){
 	return change[get_ascii];
 }
 void allinone(const string &IDNumber,bool type){
-	char gender;
+	int gender;
   struct timeval tv;
   struct timeval tz;
-	if(sizeof(IDNumber)>1){
+	if(IDNumber.length()==10){
 	
 		if(type)
-			cout<<IDNumber<<": an valid ID #";
+			cout<<IDNumber<<": an valid ID #"<<endl;
 		else
-			cout<<IDNumber<<": an invalid ID #";
+			cout<<IDNumber<<": an invalid ID #"<<endl;
 	}
 	else{
+	
 			if(IDNumber[0]=='M')
-				gender='M';
+				gender=1;
 			else if(IDNumber[0]=='F')
-				gender='F';
-			cout<<"This is gender"<<gender<<endl;
-			//generate(gender);
+				gender=2;
+			//cout<<"This is gender"<<gender<<endl;
+			generate(gender);
 		}
   		/*gettimeofday(&tv,NULL);
 		generate(gender);
@@ -116,7 +125,7 @@ void allinone(const string &IDNumber,bool type){
 		cout<<"Timing:"<<us<<" microseconds"<<endl;*/
 
 }
-void generate(char gender){
+void generate(int gender){
 	char ran;
 	char Id[11]={NULL};
 	char english;
@@ -124,13 +133,13 @@ void generate(char gender){
 	srand(time(NULL));
 	english=rand()%26+65;
 	Id[0]=english;
-	Id[1]=gender;
+	Id[1]=gender+48;
 	for(i=2;i<9;i++){
 		ran=rand()%10+48;
 		Id[i]=ran;
 	}
 	check=sumofAllPlaces(Id);
-	Id[9]=check+47;
+	Id[9]=check;
 	cout<<"Generated a valid ID #:"<<Id<<endl;
 
 }
