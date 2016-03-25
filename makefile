@@ -1,7 +1,7 @@
 
-main:i.o
-	g++ -o test  i.o
-	g++  -g -c  i.cpp
+main:id.o
+	g++ -o a.out  id.o
+	g++  -g -c  id.cpp
 
 clean:
 	rm -f *.o
