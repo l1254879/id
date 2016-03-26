@@ -21,7 +21,6 @@ void openfile_and_merge(int argc,char *argv[]){
   char id[11]={0};//since getline read \0
   bool type_for_str_compare,type_for_id_valid;//str_compare is to use on returnSubstr,id_valid use on isvalid function
   int substr; //returnSubstr return int
-  string get_substr;//get the ID firt place char A-Z
   string call_startwith;//deal with string int transform
   string gender;//get M or F
   string Id;//get the finish generate ID
@@ -52,14 +51,15 @@ void openfile_and_merge(int argc,char *argv[]){
    						        	cout<<"Generate a valid Female ID #: "<<Id<<"; Timing: "<<time<<" microseconds"<<endl;
                    }
             		else{
-             				 get_substr=id[0];
-              				 substr=returnSubstr(get_substr);         /*   Deal with  judge id */
+              				 substr=returnSubstr(id);         /*   Deal with  judge id */
+              				 ss.clear();
               				 ss<<substr;
               				 ss>>call_startwith;
              				 type_for_str_compare=startsWith(id,call_startwith);
+             				 call_startwith.clear();
               				 if(type_for_str_compare){
                     			 type_for_id_valid=isvalid(id);
-             					 if(type_for_id_valid)
+            					 if(type_for_id_valid)
                      					 cout<<id<<": a valid ID #"<<endl;
              					 else
                      					cout<<id<<" an invalid ID #"<<endl;
@@ -150,11 +150,13 @@ int returnSubstr(const string &IDNumber){
     	return change_local_char_to_Int[get_ascii];
 }
 bool isvalid(const string &IDNumber){
-	char return_check_code;//get the check code
+	int return_check_code;//declar the check code
 	char Id_check_code;
-	Id_check_code=IDNumber[9];
-	return_check_code=sumofAllPlaces(IDNumber);
-	if(return_check_code==Id_check_code)
+	char tmp_check;
+	Id_check_code=IDNumber[9];//the last ID num that is check code
+	return_check_code=sumofAllPlaces(IDNumber);//get int check code
+	tmp_check=return_check_code+48;
+	if(tmp_check==Id_check_code)
 		return true;
 	else
 		return false;
@@ -166,12 +168,15 @@ bool startsWith (const string& IDNumber,const string& substr){
   string trans_substr_to_char;
   stringstream ss;
 
+  trans_substr_to_char.clear();
   cpy_substr=substr;
   get_local_num = returnSubstr(IDNumber);
+  ss.clear();
   ss<<get_local_num;
   ss>>trans_substr_to_char;
-  if(cpy_substr.compare(trans_substr_to_char)==0){
-    return true;}
+  if(cpy_substr.compare(trans_substr_to_char)==0){//str compare
+    return true;
+   }
   else
     return false;
 }
